@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>etsoo.snk</AssemblyOriginatorKeyFile>
+    <Version>1.0.1</Version>
+    <Authors>ETSOO SmartERP NextGen Team</Authors>
+    <Company>ETSOO</Company>
+    <Copyright>Copyright © ETSOO 2004 - 2021</Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://www.etsoo.com/SmartERP/</PackageProjectUrl>
+    <PackageIcon>logo.png</PackageIcon>
+    <RepositoryUrl>https://github.com/ETSOO/com.etsoo.SendCloudSDK</RepositoryUrl>
+    <RepositoryType>GitHub</RepositoryType>
+    <Description>SendCloud SMS &amp; Email SDK
+SendCloud 短信邮件发送服务开发工具
+https://sendcloud.sohu.com, https://www.sendcloud.net/</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="logo.png" />
+    <None Remove="logo.png" />
+    <None Include="..\logo.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+
+</Project>
