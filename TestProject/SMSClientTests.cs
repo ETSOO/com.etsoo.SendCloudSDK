@@ -13,24 +13,15 @@ namespace TestProject
 
         public SMSClientTests()
         {
-            client = new SMSClient(new HttpClient(), "*user*", "*key*", Countries.CN);
+            client = new SMSClient(new HttpClient(), "etsoo", "*JfGcgHp4wB4JPTKG5CHnFPkVwX0hj15N", Countries.CN);
             client.AddTemplate(new TemplateItem(TemplateKind.Code, "762226", Country: "CN", Default: true));
             client.AddTemplate(new TemplateItem(TemplateKind.Code, "762227", Default: true));
         }
 
         [Test]
-        public async Task SendCodeAsync_DemesticTests()
+        public async Task SendCodeAsync_Tests()
         {
             // Arrange & act
-            var result = await client.SendCodeAsync("13853259135", "123456");
-
-            // Assert
-            Assert.AreEqual(false, result.Success);
-        }
-
-        [Test]
-        public async Task SendCodeAsync_InternationalTests()
-        {
             var result = await client.SendCodeAsync("+64210722065", "123456");
 
             // Assert

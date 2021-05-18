@@ -127,37 +127,52 @@ namespace com.etsoo.SendCloudSDK
             // Mobile only and avoid duplicate items
             var validatedMobiles = mobiles.UniquePhones().Where(m => m.IsMobile);
 
-            if (!validatedMobiles.Any())
+            var count = validatedMobiles.Count();
+            if (count == 0)
             {
-                return new ActionResult(false, -1, "No Numbers");
+                return new ActionResult(false, -1, "No Valid Item");
             }
-            else if (validatedMobiles.Count() > 2000)
+            else if (count > 2000)
             {
                 return new ActionResult(false, -1, "Max 2000 Items");
             }
+
+            // Is international
+            bool intl;
 
             if (template == null)
             {
                 // Countries
                 var countries = validatedMobiles.GroupBy(m => m.Country).Select(g => g.Key);
 
+                // If more then one country or different with the default country
+                var countriesCount = countries.Count();
+                var firstCountry = countries.First();
+                intl = countriesCount > 1 || firstCountry != country.Id;
+
                 // Default template
-                template = GetTemplate(kind, country: countries.Count() > 1 ? null : countries.First());
+                template = GetTemplate(kind, country: (countriesCount > 1 ? null : firstCountry));
                 if (template == null)
                 {
                     throw new ArgumentNullException(nameof(template));
                 }
             }
-
-            // Is domestic
-            var msgType = 0;
-            if (template.Country != country.Id && mobiles.Any(m => m.Country != country.Id))
+            else if (template.Country == null)
             {
-                msgType = 2;
+                // No country specified
+                intl = mobiles.Any(m => m.Country != country.Id);
+            }
+            else
+            {
+                // Specific country
+                intl = template.Country != country.Id;
             }
 
+            // Is domestic
+            var msgType = intl ? 2 : 0;
+
             // Join all numbers
-            var numbers = validatedMobiles.Select(m => msgType == 0 ? m.PhoneNumber : m.ToInternationalFormat(country.ExitCode));
+            var numbers = validatedMobiles.Select(m => intl ? m.ToInternationalFormat(country.ExitCode) : m.PhoneNumber);
 
             // Variables to JSON
             var varsJson = JsonSerializer.Serialize(vars, new JsonSerializerOptions { WriteIndented = false, AllowTrailingCommas = false });
@@ -179,7 +194,9 @@ namespace com.etsoo.SendCloudSDK
             var endPoint = template.EndPoint ?? "https://www.sendcloud.net/smsapi/send";
 
             // Post
+#pragma warning disable CS8620 // Argument cannot be used for parameter due to differences in the nullability of reference types.
             var response = await httpClient.PostAsync(endPoint, new FormUrlEncodedContent(data));
+#pragma warning restore CS8620 // Argument cannot be used for parameter due to differences in the nullability of reference types.
 
             // Result
             var result = await response.Content.ReadFromJsonAsync<SMSActionResult>();

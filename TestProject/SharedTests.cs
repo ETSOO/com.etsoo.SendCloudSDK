@@ -65,10 +65,29 @@ namespace TestProject
         }
 
         [Test]
+        public void CountryPhone_ToInternationalFormat_Tests()
+        {
+            // Arrange
+            var phone = Countries.CreatePhone("0210722065", "NZ");
+
+            // Act 1
+            var result1 = phone?.ToInternationalFormat();
+
+            // Assert 1
+            Assert.AreEqual("+64210722065", result1);
+
+            // Act 2
+            var result2 = phone?.ToInternationalFormat("00");
+
+            // Assert 2
+            Assert.AreEqual("0064210722065", result2);
+        }
+
+        [Test]
         public void Extensions_UniquePhones_Tests()
         {
             // Arrange
-            var phones = Countries.CreatePhones(new [] { "13853259135", "+64210733065", "+8613853259135" }, "CN");
+            var phones = Countries.CreatePhones(new [] { "13853259135", "+64210722065", "+8613853259135" }, "CN");
 
             // Act & assert
             Assert.AreEqual(2, phones.UniquePhones().Count());

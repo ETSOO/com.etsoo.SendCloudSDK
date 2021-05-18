@@ -83,7 +83,7 @@ namespace com.etsoo.SendCloudSDK.Shared
             /// <returns>Result</returns>
             public string ToInternationalFormat(string exitCode = "+")
             {
-                return string.Concat(exitCode, Countries.GetById(Country)?.Idd, IsMobile ? PhoneNumber : PhoneNumber.TrimStart('0'));
+                return string.Concat(exitCode, Countries.GetById(Country)?.Idd, PhoneNumber.TrimStart('0'));
             }
         }
 
