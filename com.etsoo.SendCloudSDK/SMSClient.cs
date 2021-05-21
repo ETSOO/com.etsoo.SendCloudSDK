@@ -63,7 +63,16 @@ namespace com.etsoo.SendCloudSDK
             Countries.GetById(section.GetValue<string>("Country")) ?? Countries.CN
         )
         {
-            var templates = section.GetSection("Templates").Get<IEnumerable<TemplateItem>>();
+            // var templates = section.GetSection("Templates").Get<TemplateItem[]>();
+            var templates = section.GetSection("Templates").GetChildren().Select(item => new TemplateItem(
+                    Enum.Parse<TemplateKind>(item.GetValue<string>("Kind")),
+                    item.GetValue<string>("TemplateId"),
+                    item.GetValue<string>("EndPoint"),
+                    item.GetValue<string>("Country"),
+                    item.GetValue<string>("Language"),
+                    item.GetValue<string>("Signature"),
+                    item.GetValue("Default", false)
+                ));
             AddTemplates(templates);
         }
 
