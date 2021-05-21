@@ -67,7 +67,7 @@ namespace com.etsoo.SendCloudSDK
         /// <param name="code">Code</param>
         /// <param name="templateId">Template id</param>
         /// <returns>Result</returns>
-        Task<ActionResult> SendCodeAsync(string mobile, string code, string templateId);
+        Task<ActionResult> SendCodeAsync(Country.Phone mobile, string code, string templateId);
 
         /// <summary>
         /// Async send code
@@ -77,6 +77,6 @@ namespace com.etsoo.SendCloudSDK
         /// <param name="code">Code</param>
         /// <param name="template">Template</param>
         /// <returns>Result</returns>
-        Task<ActionResult> SendCodeAsync(string mobile, string code, TemplateItem? template = null);
+        Task<ActionResult> SendCodeAsync(Country.Phone mobile, string code, TemplateItem? template = null);
     }
 }

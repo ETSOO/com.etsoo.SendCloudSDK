@@ -20,8 +20,16 @@ namespace TestProject
         [Test]
         public async Task SendCodeAsync_Tests()
         {
-            // Arrange & act
-            var result = await client.SendCodeAsync("+64210722065", "123456");
+            // Arrange
+            var mobile = Countries.CreatePhone("+64210722065");
+            if (mobile == null)
+            {
+                Assert.Fail("Mobile phone number is invalid");
+                return;
+            }
+
+            // Act
+            var result = await client.SendCodeAsync(mobile, "123456");
 
             // Assert
             Assert.AreEqual(false, result.Success);

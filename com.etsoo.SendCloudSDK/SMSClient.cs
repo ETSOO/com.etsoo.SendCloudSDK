@@ -218,7 +218,7 @@ namespace com.etsoo.SendCloudSDK
         /// <param name="code">Code</param>
         /// <param name="templateId">Template id</param>
         /// <returns>Result</returns>
-        public async Task<ActionResult> SendCodeAsync(string mobile, string code, string templateId)
+        public async Task<ActionResult> SendCodeAsync(Country.Phone mobile, string code, string templateId)
         {
             return await SendCodeAsync(mobile, code, GetTemplate(TemplateKind.Code, templateId));
         }
@@ -231,14 +231,14 @@ namespace com.etsoo.SendCloudSDK
         /// <param name="code">Code</param>
         /// <param name="template">Template</param>
         /// <returns>Result</returns>
-        public async Task<ActionResult> SendCodeAsync(string mobile, string code, TemplateItem? template = null)
+        public async Task<ActionResult> SendCodeAsync(Country.Phone mobile, string code, TemplateItem? template = null)
         {
             var vars = new Dictionary<string, string>
             {
                 ["code"] = code
             };
 
-            return await SendAsync(TemplateKind.Code, new List<string> { mobile }, vars, template);
+            return await SendAsync(TemplateKind.Code, new List<Country.Phone> { mobile }, vars, template);
         }
     }
 }
