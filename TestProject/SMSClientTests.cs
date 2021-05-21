@@ -1,7 +1,6 @@
 using com.etsoo.SendCloudSDK;
 using com.etsoo.SendCloudSDK.Shared;
 using NUnit.Framework;
-using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 

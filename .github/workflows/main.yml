@@ -20,5 +20,8 @@ jobs:
           # NuGet package id, used for version detection & defaults to project name
           # PACKAGE_NAME: Seq.App.Wechat
 
+          # Flag to toggle git tagging, enabled by default
+          TAG_COMMIT: false
+
           # API key to authenticate with NuGet server
           NUGET_KEY: ${{secrets.ETSOONugetKey}}

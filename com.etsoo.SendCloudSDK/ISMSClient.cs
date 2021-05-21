@@ -11,6 +11,11 @@ namespace com.etsoo.SendCloudSDK
     public interface ISMSClient : ITemplateClient
     {
         /// <summary>
+        /// Demestic country
+        /// </summary>
+        Country Country { get; }
+
+        /// <summary>
         /// Async send SMS with template id
         /// 异步通过模板编号发送短信
         /// </summary>

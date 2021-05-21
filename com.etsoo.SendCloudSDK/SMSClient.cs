@@ -26,7 +26,11 @@ namespace com.etsoo.SendCloudSDK
         private readonly HttpClient httpClient;
         private readonly string smsUser;
         private readonly string smsKey;
-        private readonly Country country;
+
+        /// <summary>
+        /// Demestic country
+        /// </summary>
+        public Country Country { get; private set; }
 
         /// <summary>
         /// Constructor
@@ -41,7 +45,8 @@ namespace com.etsoo.SendCloudSDK
             this.httpClient = httpClient;
             this.smsUser = smsUser;
             this.smsKey = smsKey;
-            this.country = country;
+
+            Country = country;
         }
 
         /// <summary>
@@ -82,7 +87,7 @@ namespace com.etsoo.SendCloudSDK
         /// <returns>Result</returns>
         public async Task<ActionResult> SendAsync(TemplateKind kind, IEnumerable<string> mobiles, Dictionary<string, string> vars, string templateId)
         {
-            return await SendAsync(kind, Countries.CreatePhones(mobiles, country.Id), vars, templateId);
+            return await SendAsync(kind, Countries.CreatePhones(mobiles, Country.Id), vars, templateId);
         }
 
         /// <summary>
@@ -110,7 +115,7 @@ namespace com.etsoo.SendCloudSDK
         /// <returns>Result</returns>
         public async Task<ActionResult> SendAsync(TemplateKind kind, IEnumerable<string> mobiles, Dictionary<string, string> vars, TemplateItem? template = null)
         {
-            return await SendAsync(kind, Countries.CreatePhones(mobiles, country.Id), vars, template);
+            return await SendAsync(kind, Countries.CreatePhones(mobiles, Country.Id), vars, template);
         }
 
         /// <summary>
@@ -148,7 +153,7 @@ namespace com.etsoo.SendCloudSDK
                 // If more then one country or different with the default country
                 var countriesCount = countries.Count();
                 var firstCountry = countries.First();
-                intl = countriesCount > 1 || firstCountry != country.Id;
+                intl = countriesCount > 1 || firstCountry != Country.Id;
 
                 // Default template
                 template = GetTemplate(kind, country: (countriesCount > 1 ? null : firstCountry));
@@ -160,19 +165,19 @@ namespace com.etsoo.SendCloudSDK
             else if (template.Country == null)
             {
                 // No country specified
-                intl = mobiles.Any(m => m.Country != country.Id);
+                intl = mobiles.Any(m => m.Country != Country.Id);
             }
             else
             {
                 // Specific country
-                intl = template.Country != country.Id;
+                intl = template.Country != Country.Id;
             }
 
             // Is domestic
             var msgType = intl ? 2 : 0;
 
             // Join all numbers
-            var numbers = validatedMobiles.Select(m => intl ? m.ToInternationalFormat(country.ExitCode) : m.PhoneNumber);
+            var numbers = validatedMobiles.Select(m => intl ? m.ToInternationalFormat(Country.ExitCode) : m.PhoneNumber);
 
             // Variables to JSON
             var varsJson = JsonSerializer.Serialize(vars, new JsonSerializerOptions { WriteIndented = false, AllowTrailingCommas = false });
