@@ -1,5 +1,6 @@
 using com.etsoo.SendCloudSDK;
-using com.etsoo.SendCloudSDK.Shared;
+using com.etsoo.Utils.Address;
+using com.etsoo.Utils.Net.SMS;
 using Microsoft.Extensions.Configuration;
 using NUnit.Framework;
 using System.IO;
@@ -15,8 +16,8 @@ namespace TestProject
 
         public SMSClientTests()
         {
-            client = new SMSClient(new HttpClient(), "etsoo", "*JfGcgHp4wB4JPTKG5CHnFPkVwX0hj15N", Countries.CN);
-            client.AddTemplate(new TemplateItem(TemplateKind.Code, "762226", Country: "CN", Default: true));
+            client = new SMSClient(new HttpClient(), "etsoo", "*JfGcgHp4wB4JPTKG5CHnFPkVwX0hj15N", AddressRegion.CN);
+            client.AddTemplate(new TemplateItem(TemplateKind.Code, "762226", Region: "CN", Default: true));
             client.AddTemplate(new TemplateItem(TemplateKind.Code, "762227", Default: true));
         }
 
@@ -28,12 +29,12 @@ namespace TestProject
                 ""SMS"": {
                     ""SMSUser"": ""etsoo"",
                     ""SMSKey"": ""JfGcgHp4wB4JPTKG5CHnFPkVwX0hj15N"",
-                    ""Country"": ""CN"",
+                    ""Region"": ""CN"",
                     ""Templates"": [
                         {
                             ""Kind"": ""Code"",
                             ""TemplateId"": ""762226"",
-                            ""Country"": ""CN"",
+                            ""Region"": ""CN"",
                             ""Language"": ""zh-CN"",
                             ""Default"": true
                         },
@@ -51,15 +52,15 @@ namespace TestProject
             var client = new SMSClient(new HttpClient(), section);
 
             // Assert
-            Assert.AreEqual("CN", client.Country.Id);
-            Assert.AreEqual("CN", client.GetTemplate(TemplateKind.Code, "762226")?.Country);
+            Assert.AreEqual("CN", client.Region.Id);
+            Assert.AreEqual("CN", client.GetTemplate(TemplateKind.Code, "762226")?.Region);
         }
 
         [Test]
         public async Task SendCodeAsync_Tests()
         {
             // Arrange
-            var mobile = Countries.CreatePhone("+64210722065");
+            var mobile = AddressRegion.CreatePhone("+64210722065");
             if (mobile == null)
             {
                 Assert.Fail("Mobile phone number is invalid");
