@@ -1,5 +1,4 @@
-﻿using com.etsoo.Utils.Actions;
-using com.etsoo.Utils.Address;
+﻿using com.etsoo.Utils.Address;
 using com.etsoo.Utils.Crypto;
 using com.etsoo.Utils.Net.SMS;
 using com.etsoo.Utils.String;
@@ -11,6 +10,7 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.Threading.Tasks;
+using ActionResultDic = com.etsoo.Utils.Actions.ActionResult<com.etsoo.Utils.String.StringKeyDictionaryObject>;
 
 namespace com.etsoo.SendCloudSDK
 {
