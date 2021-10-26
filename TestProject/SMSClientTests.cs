@@ -71,7 +71,7 @@ namespace TestProject
             var result = await client.SendCodeAsync(mobile, "123456");
 
             // Assert
-            Assert.AreEqual(false, result.Success);
+            Assert.AreEqual(false, result.Ok);
         }
     }
 }
