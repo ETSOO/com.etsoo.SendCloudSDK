@@ -1,4 +1,5 @@
-﻿using com.etsoo.Utils.Address;
+﻿using com.etsoo.Utils.Actions;
+using com.etsoo.Utils.Address;
 using com.etsoo.Utils.Crypto;
 using com.etsoo.Utils.Net.SMS;
 using com.etsoo.Utils.String;
@@ -10,7 +11,6 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.Threading.Tasks;
-using ActionResultDic = com.etsoo.Utils.Actions.ActionResult<com.etsoo.Utils.String.StringKeyDictionaryObject>;
 
 namespace com.etsoo.SendCloudSDK
 {
@@ -99,7 +99,7 @@ namespace com.etsoo.SendCloudSDK
         /// <param name="vars">Variables</param>
         /// <param name="templateId">Template id</param>
         /// <returns>Result</returns>
-        public async Task<ActionResultDic> SendAsync(TemplateKind kind, IEnumerable<string> mobiles, Dictionary<string, string> vars, string templateId)
+        public async Task<ActionResult> SendAsync(TemplateKind kind, IEnumerable<string> mobiles, Dictionary<string, string> vars, string templateId)
         {
             return await SendAsync(kind, AddressRegion.CreatePhones(mobiles, Region.Id), vars, templateId);
         }
@@ -113,7 +113,7 @@ namespace com.etsoo.SendCloudSDK
         /// <param name="vars">Variables</param>
         /// <param name="templateId">Template id</param>
         /// <returns>Result</returns>
-        public async Task<ActionResultDic> SendAsync(TemplateKind kind, IEnumerable<AddressRegion.Phone> mobiles, Dictionary<string, string> vars, string templateId)
+        public async Task<ActionResult> SendAsync(TemplateKind kind, IEnumerable<AddressRegion.Phone> mobiles, Dictionary<string, string> vars, string templateId)
         {
             return await SendAsync(kind, mobiles, vars, GetTemplate(TemplateKind.Code, templateId));
         }
@@ -127,7 +127,7 @@ namespace com.etsoo.SendCloudSDK
         /// <param name="vars">Variables</param>
         /// <param name="template">Template</param>
         /// <returns>Result</returns>
-        public async Task<ActionResultDic> SendAsync(TemplateKind kind, IEnumerable<string> mobiles, Dictionary<string, string> vars, TemplateItem? template = null)
+        public async Task<ActionResult> SendAsync(TemplateKind kind, IEnumerable<string> mobiles, Dictionary<string, string> vars, TemplateItem? template = null)
         {
             return await SendAsync(kind, AddressRegion.CreatePhones(mobiles, Region.Id), vars, template);
         }
@@ -141,7 +141,7 @@ namespace com.etsoo.SendCloudSDK
         /// <param name="vars">Variables</param>
         /// <param name="template">Template</param>
         /// <returns>Result</returns>
-        public async Task<ActionResultDic> SendAsync(TemplateKind kind, IEnumerable<AddressRegion.Phone> mobiles, Dictionary<string, string> vars, TemplateItem? template = null)
+        public async Task<ActionResult> SendAsync(TemplateKind kind, IEnumerable<AddressRegion.Phone> mobiles, Dictionary<string, string> vars, TemplateItem? template = null)
         {
             // Mobile only and avoid duplicate items
             var validatedMobiles = mobiles.UniquePhones().Where(m => m.IsMobile);
@@ -149,11 +149,11 @@ namespace com.etsoo.SendCloudSDK
             var count = validatedMobiles.Count();
             if (count == 0)
             {
-                return new ActionResultDic { Status = -1, Title = "No Valid Item" };
+                return new ActionResult { Status = -1, Title = "No Valid Item" };
             }
             else if (count > 2000)
             {
-                return new ActionResultDic { Status = -1, Title = "Max 2000 Items" };
+                return new ActionResult { Status = -1, Title = "Max 2000 Items" };
             }
 
             // Is international
@@ -225,7 +225,7 @@ namespace com.etsoo.SendCloudSDK
             var resultData = info == null ? new StringKeyDictionaryObject() : new StringKeyDictionaryObject(info);
 
             // Return
-            return new ActionResultDic { Ok = result?.Result ?? false, Status = result?.StatusCode, Title = result?.Message, Data = resultData };
+            return new ActionResult { Ok = result?.Result ?? false, Status = result?.StatusCode, Title = result?.Message, Data = resultData };
         }
 
         /// <summary>
@@ -236,7 +236,7 @@ namespace com.etsoo.SendCloudSDK
         /// <param name="code">Code</param>
         /// <param name="templateId">Template id</param>
         /// <returns>Result</returns>
-        public async Task<ActionResultDic> SendCodeAsync(AddressRegion.Phone mobile, string code, string templateId)
+        public async Task<ActionResult> SendCodeAsync(AddressRegion.Phone mobile, string code, string templateId)
         {
             return await SendCodeAsync(mobile, code, GetTemplate(TemplateKind.Code, templateId));
         }
@@ -249,7 +249,7 @@ namespace com.etsoo.SendCloudSDK
         /// <param name="code">Code</param>
         /// <param name="template">Template</param>
         /// <returns>Result</returns>
-        public async Task<ActionResultDic> SendCodeAsync(AddressRegion.Phone mobile, string code, TemplateItem? template = null)
+        public async Task<ActionResult> SendCodeAsync(AddressRegion.Phone mobile, string code, TemplateItem? template = null)
         {
             var vars = new Dictionary<string, string>
             {
