@@ -14,9 +14,15 @@ namespace TestProject
     {
         readonly ISMSClient client;
 
+        // find the UserSecretId we added in the csproj file
+        readonly IConfigurationRoot builder = new ConfigurationBuilder().AddUserSecrets<SMSClientTests>().Build();
+
         public SMSClientTests()
         {
-            client = new SMSClient(new HttpClient(), "etsoo", "*JfGcgHp4wB4JPTKG5CHnFPkVwX0hj15N", AddressRegion.CN);
+            var smsUser = builder["SMSUser"];
+            var smsPassword = builder["SMSPassword"];
+
+            client = new SMSClient(new HttpClient(), smsUser, smsPassword, AddressRegion.CN);
             client.AddTemplate(new TemplateItem(TemplateKind.Code, "762226", Region: "CN", Default: true));
             client.AddTemplate(new TemplateItem(TemplateKind.Code, "762227", Default: true));
         }
@@ -24,11 +30,14 @@ namespace TestProject
         [Test]
         public void SMSClient_ConfigurationInit_Tests()
         {
+            var smsUser = builder["SMSUser"];
+            var smsPassword = builder["SMSPassword"];
+
             // Arrange
             using var stream = new MemoryStream(Encoding.UTF8.GetBytes(@"{
                 ""SMS"": {
-                    ""SMSUser"": ""etsoo"",
-                    ""SMSKey"": ""JfGcgHp4wB4JPTKG5CHnFPkVwX0hj15N"",
+                    ""SMSUser"": "" + smsUser + "",
+                    ""SMSKey"": "" + smsPassword + "",
                     ""Region"": ""CN"",
                     ""Templates"": [
                         {
@@ -60,7 +69,7 @@ namespace TestProject
         public async Task SendCodeAsync_Tests()
         {
             // Arrange
-            var mobile = AddressRegion.CreatePhone("+64210722065");
+            var mobile = AddressRegion.CreatePhone("+64210733065");
             if (mobile == null)
             {
                 Assert.Fail("Mobile phone number is invalid");
@@ -71,7 +80,7 @@ namespace TestProject
             var result = await client.SendCodeAsync(mobile, "123456");
 
             // Assert
-            Assert.AreEqual(false, result.Ok);
+            Assert.AreEqual(true, result.Ok);
         }
     }
 }
