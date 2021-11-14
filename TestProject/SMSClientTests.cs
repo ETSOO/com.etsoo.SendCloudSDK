@@ -34,27 +34,27 @@ namespace TestProject
             var smsPassword = builder["SMSPassword"];
 
             // Arrange
-            using var stream = new MemoryStream(Encoding.UTF8.GetBytes(@"{
-                ""SMS"": {
-                    ""SMSUser"": "" + smsUser + "",
-                    ""SMSKey"": "" + smsPassword + "",
+            using var stream = new MemoryStream(Encoding.UTF8.GetBytes(@$"{{
+                ""SMS"": {{
+                    ""SMSUser"": ""{smsUser}"",
+                    ""SMSKey"": ""{smsPassword}"",
                     ""Region"": ""CN"",
                     ""Templates"": [
-                        {
+                        {{
                             ""Kind"": ""Code"",
                             ""TemplateId"": ""762226"",
                             ""Region"": ""CN"",
                             ""Language"": ""zh-CN"",
                             ""Default"": true
-                        },
-                        {
+                        }},
+                        {{
                             ""Kind"": ""Code"",
                             ""TemplateId"": ""762227"",
                             ""Default"": true
-                        }
+                        }}
                     ]
-                }
-            }"));
+                }}
+            }}"));
             var section = new ConfigurationBuilder().AddJsonStream(stream).Build().GetSection("SMS");
 
             // Act

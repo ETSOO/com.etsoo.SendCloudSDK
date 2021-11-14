@@ -60,10 +60,11 @@ namespace com.etsoo.SendCloudSDK
         /// <param name="httpClient">Http client, use IHttpClientFactory to create, services.AddHttpClient</param>
         /// <param name="smsUser">SMS User</param>
         /// <param name="smsKey">SMS key</param>
-        public SMSClient(HttpClient httpClient, IConfigurationSection section) : this(
-            httpClient, 
-            section.GetValue<string>("SMSUser"), 
-            section.GetValue<string>("SMSKey"),
+        /// <param name="secureManager">Secure manager</param>
+        public SMSClient(HttpClient httpClient, IConfigurationSection section, Func<string, string>? secureManager = null) : this(
+            httpClient,
+            CryptographyUtils.UnsealData(section.GetValue<string>("SMSUser"), secureManager),
+            CryptographyUtils.UnsealData(section.GetValue<string>("SMSKey"), secureManager),
             AddressRegion.GetById(section.GetValue<string>("Region")) ?? AddressRegion.CN
         )
         {
