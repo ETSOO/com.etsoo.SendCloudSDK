@@ -1,6 +1,6 @@
+using com.etsoo.Address;
 using com.etsoo.SendCloudSDK;
-using com.etsoo.Utils.Address;
-using com.etsoo.Utils.Net.SMS;
+using com.etsoo.SMS;
 using Microsoft.Extensions.Configuration;
 using NUnit.Framework;
 using System.IO;

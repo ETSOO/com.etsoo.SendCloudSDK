@@ -1,14 +1,13 @@
-﻿using com.etsoo.Utils.Actions;
-using com.etsoo.Utils.Address;
+﻿using com.etsoo.Address;
+using com.etsoo.SMS;
+using com.etsoo.Utils.Actions;
 using com.etsoo.Utils.Crypto;
-using com.etsoo.Utils.Net.SMS;
 using com.etsoo.Utils.String;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Net.Http.Json;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -44,7 +43,7 @@ namespace com.etsoo.SendCloudSDK
         /// <param name="smsUser">SMS User</param>
         /// <param name="smsKey">SMS key</param>
         /// <param name="region">Demestic country or region</param>
-        public SMSClient(HttpClient httpClient, string smsUser, string smsKey, AddressRegion region)
+        public SMSClient(HttpClient httpClient, string smsUser, string smsKey, AddressRegion region) : base(httpClient)
         {
             this.httpClient = httpClient;
             this.smsUser = smsUser;
@@ -214,12 +213,7 @@ namespace com.etsoo.SendCloudSDK
             var endPoint = template.EndPoint ?? "https://www.sendcloud.net/smsapi/send";
 
             // Post
-#pragma warning disable CS8620 // Argument cannot be used for parameter due to differences in the nullability of reference types.
-            var response = await httpClient.PostAsync(endPoint, new FormUrlEncodedContent(data));
-#pragma warning restore CS8620 // Argument cannot be used for parameter due to differences in the nullability of reference types.
-
-            // Result
-            var result = await response.Content.ReadFromJsonAsync<SMSActionResult>();
+            var result = await PostFormAsync<SMSActionResult>(endPoint, data);
 
             // Data
             var info = result?.Info;
