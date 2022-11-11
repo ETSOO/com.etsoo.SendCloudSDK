@@ -26,7 +26,9 @@ namespace com.etsoo.SendCloudSDK
     /// </summary>
     public class SMSClient : TemplateClient, ISMSClient
     {
-        private readonly HttpClient httpClient;
+        private const string SMSUserField = "SMSUser";
+        private const string SMSKeyField = "SMSKey";
+
         private readonly string smsUser;
         private readonly string smsKey;
 
@@ -45,7 +47,6 @@ namespace com.etsoo.SendCloudSDK
         /// <param name="region">Demestic country or region</param>
         public SMSClient(HttpClient httpClient, string smsUser, string smsKey, AddressRegion region) : base(httpClient)
         {
-            this.httpClient = httpClient;
             this.smsUser = smsUser;
             this.smsKey = smsKey;
 
@@ -60,10 +61,10 @@ namespace com.etsoo.SendCloudSDK
         /// <param name="smsUser">SMS User</param>
         /// <param name="smsKey">SMS key</param>
         /// <param name="secureManager">Secure manager</param>
-        public SMSClient(HttpClient httpClient, IConfigurationSection section, Func<string, string>? secureManager = null) : this(
+        public SMSClient(HttpClient httpClient, IConfigurationSection section, Func<string, string, string>? secureManager = null) : this(
             httpClient,
-            CryptographyUtils.UnsealData(section.GetValue<string>("SMSUser"), secureManager),
-            CryptographyUtils.UnsealData(section.GetValue<string>("SMSKey"), secureManager),
+            CryptographyUtils.UnsealData(SMSUserField, section.GetValue<string>(SMSUserField), secureManager),
+            CryptographyUtils.UnsealData(SMSKeyField, section.GetValue<string>(SMSKeyField), secureManager),
             AddressRegion.GetById(section.GetValue<string>("Region")) ?? AddressRegion.CN
         )
         {
