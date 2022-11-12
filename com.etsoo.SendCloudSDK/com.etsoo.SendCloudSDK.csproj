@@ -6,7 +6,7 @@
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>etsoo.snk</AssemblyOriginatorKeyFile>
-    <Version>1.0.21</Version>
+    <Version>1.0.22</Version>
     <Authors>ETSOO SmartERP NextGen Team</Authors>
     <Company>ETSOO / 亿速思维</Company>
     <Copyright>Copyright © ETSOO 2004 - 2021</Copyright>
@@ -29,9 +29,9 @@ SendCloud 短信邮件发送服务开发工具包</Description>
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="com.etsoo.SMS" Version="1.0.5" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="6.0.0" />
+    <PackageReference Include="com.etsoo.SMS" Version="1.0.7" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="7.0.0" />
   </ItemGroup>
 
 </Project>
