@@ -1,4 +1,5 @@
 ﻿using com.etsoo.SMS;
+using System;
 using System.Collections.Generic;
 
 namespace com.etsoo.SendCloudSDK
@@ -13,5 +14,16 @@ namespace com.etsoo.SendCloudSDK
         public required string SMSKey { get; set; }
         public string Region { get; init; } = "CN";
         public IEnumerable<TemplateItem>? Templates { get; init; }
+
+        /// <summary>
+        /// Unseal data
+        /// 解封信息
+        /// </summary>
+        /// <param name="secureManager">Secure manager</param>
+        public void UnsealData(Func<string, string, string> secureManager)
+        {
+            SMSUser = secureManager(nameof(SMSUser), SMSUser);
+            SMSKey = secureManager(nameof(SMSKey), SMSKey);
+        }
     }
 }
