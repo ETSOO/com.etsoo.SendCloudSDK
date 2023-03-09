@@ -17,12 +17,12 @@ namespace TestProject
         // find the UserSecretId we added in the csproj file
         readonly IConfigurationRoot builder = new ConfigurationBuilder().AddUserSecrets<SMSClientTests>().Build();
 
+        string SMSUser => builder["SMSUser"] ?? string.Empty;
+        string SMSKey => builder["SMSPassword"] ?? string.Empty;
+
         public SMSClientTests()
         {
-            var smsUser = builder["SMSUser"];
-            var smsPassword = builder["SMSPassword"];
-
-            client = new SMSClient(new HttpClient(), smsUser, smsPassword, AddressRegion.CN);
+            client = new SMSClient(new SMSClientOptions { SMSUser = SMSUser, SMSKey = SMSKey }, new HttpClient());
             client.AddTemplate(new TemplateItem(TemplateKind.Code, "762226", Region: "CN", Default: true));
             client.AddTemplate(new TemplateItem(TemplateKind.Code, "762227", Default: true));
         }
@@ -30,14 +30,11 @@ namespace TestProject
         [Test]
         public void SMSClient_ConfigurationInit_Tests()
         {
-            var smsUser = builder["SMSUser"];
-            var smsPassword = builder["SMSPassword"];
-
             // Arrange
             using var stream = new MemoryStream(Encoding.UTF8.GetBytes(@$"{{
                 ""SMS"": {{
-                    ""SMSUser"": ""{smsUser}"",
-                    ""SMSKey"": ""{smsPassword}"",
+                    ""SMSUser"": ""{SMSUser}"",
+                    ""SMSKey"": ""{SMSKey}"",
                     ""Region"": ""CN"",
                     ""Templates"": [
                         {{
@@ -55,10 +52,12 @@ namespace TestProject
                     ]
                 }}
             }}"));
-            var section = new ConfigurationBuilder().AddJsonStream(stream).Build().GetSection("SMS");
+
+            var options = new ConfigurationBuilder().AddJsonStream(stream).Build().GetSection("SMS").Get<SMSClientOptions>();
+            Assert.IsNotNull(options);
 
             // Act
-            var client = new SMSClient(new HttpClient(), section);
+            var client = new SMSClient(options!, new HttpClient());
 
             // Assert
             Assert.AreEqual("CN", client.Region.Id);
