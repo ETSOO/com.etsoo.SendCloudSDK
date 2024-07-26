@@ -1,18 +1,15 @@
-using com.etsoo.Address;
+﻿using com.etsoo.Address;
 using com.etsoo.SendCloudSDK;
 using com.etsoo.SMS;
 using Microsoft.Extensions.Configuration;
-using NUnit.Framework;
-using System.IO;
-using System.Net.Http;
 using System.Text;
-using System.Threading.Tasks;
 
-namespace TestProject
+namespace com.etsoo.SendCloudSDKTests
 {
+    [TestClass]
     public class SMSClientTests
     {
-        readonly ISMSClient client;
+        readonly SMSClient client;
 
         // find the UserSecretId we added in the csproj file
         readonly IConfigurationRoot builder = new ConfigurationBuilder().AddUserSecrets<SMSClientTests>().Build();
@@ -27,7 +24,7 @@ namespace TestProject
             client.AddTemplate(new TemplateItem(TemplateKind.Code, "762227", Default: true));
         }
 
-        [Test]
+        [TestMethod]
         public void SMSClient_ConfigurationInit_Tests()
         {
             // Arrange
@@ -64,7 +61,7 @@ namespace TestProject
             Assert.AreEqual("CN", client.GetTemplate(TemplateKind.Code, "762226")?.Region);
         }
 
-        [Test]
+        [TestMethod]
         public async Task SendCodeAsync_Tests()
         {
             // Arrange

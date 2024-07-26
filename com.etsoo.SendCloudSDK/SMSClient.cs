@@ -2,6 +2,7 @@
 using com.etsoo.SMS;
 using com.etsoo.Utils.Actions;
 using com.etsoo.Utils.Crypto;
+using com.etsoo.Utils.Serialization;
 using com.etsoo.Utils.String;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -10,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -20,6 +22,21 @@ namespace com.etsoo.SendCloudSDK
     /// 短信操作结果
     /// </summary>
     public record SMSActionResult(bool Result, int? StatusCode, string? Message = null, Dictionary<string, object?>? Info = null);
+
+    /// <summary>
+    /// SendCloud JSON serializer context
+    /// SendCloud JSON序列化上下文
+    /// </summary>
+    [JsonSourceGenerationOptions(
+        PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase,
+        DictionaryKeyPolicy = JsonKnownNamingPolicy.CamelCase,
+        PropertyNameCaseInsensitive = true,
+        DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+    )]
+    [JsonSerializable(typeof(SMSActionResult))]
+    public partial class SendCloudJsonSerializerContext : JsonSerializerContext
+    {
+    }
 
     /// <summary>
     /// SMS Client
@@ -158,10 +175,7 @@ namespace com.etsoo.SendCloudSDK
 
                 // Default template
                 template = GetTemplate(kind, region: (countriesCount > 1 ? null : firstCountry));
-                if (template == null)
-                {
-                    throw new ArgumentNullException(nameof(template));
-                }
+                ArgumentNullException.ThrowIfNull(template);
             }
             else if (template.Region == null)
             {
@@ -181,7 +195,7 @@ namespace com.etsoo.SendCloudSDK
             var numbers = validatedMobiles.Select(m => intl ? m.ToInternationalFormat(Region.ExitCode) : m.PhoneNumber);
 
             // Variables to JSON
-            var varsJson = JsonSerializer.Serialize(vars, new JsonSerializerOptions { WriteIndented = false, AllowTrailingCommas = false });
+            var varsJson = JsonSerializer.Serialize(vars, CommonJsonSerializerContext.Default.DictionaryStringString);
 
             // Post data
             var data = new SortedDictionary<string, string>
@@ -200,11 +214,11 @@ namespace com.etsoo.SendCloudSDK
             var endPoint = template.EndPoint ?? "https://www.sendcloud.net/smsapi/send";
 
             // Post
-            var result = await PostFormAsync<SMSActionResult>(endPoint, data, cancellationToken);
+            var result = await PostFormAsync(endPoint, data, SendCloudJsonSerializerContext.Default.SMSActionResult, cancellationToken);
 
             // Data
             var info = result?.Info;
-            var resultData = info == null ? new StringKeyDictionaryObject() : new StringKeyDictionaryObject(info);
+            var resultData = info == null ? [] : new StringKeyDictionaryObject(info);
 
             // Return
             return new ActionResult { Ok = result?.Result ?? false, Status = result?.StatusCode, Title = result?.Message, Data = resultData };

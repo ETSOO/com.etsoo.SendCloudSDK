@@ -1,6 +1,7 @@
 ﻿using com.etsoo.SMS;
-using System;
+using Microsoft.Extensions.Options;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace com.etsoo.SendCloudSDK
 {
@@ -10,20 +11,19 @@ namespace com.etsoo.SendCloudSDK
     /// </summary>
     public record SMSClientOptions
     {
-        public required string SMSUser { get; set; }
-        public required string SMSKey { get; set; }
-        public string Region { get; init; } = "CN";
-        public IEnumerable<TemplateItem>? Templates { get; init; }
+        [Required]
+        public string SMSUser { get; set; } = string.Empty;
 
-        /// <summary>
-        /// Unseal data
-        /// 解封信息
-        /// </summary>
-        /// <param name="secureManager">Secure manager</param>
-        public void UnsealData(Func<string, string, string> secureManager)
-        {
-            SMSUser = secureManager(nameof(SMSUser), SMSUser);
-            SMSKey = secureManager(nameof(SMSKey), SMSKey);
-        }
+        [Required]
+        public required string SMSKey { get; set; } = string.Empty;
+
+        public string Region { get; set; } = "CN";
+
+        public IEnumerable<TemplateItem>? Templates { get; set; }
+    }
+
+    [OptionsValidator]
+    public partial class ValidateSMSClientOptions : IValidateOptions<SMSClientOptions>
+    {
     }
 }

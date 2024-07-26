@@ -1,15 +1,15 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>etsoo.snk</AssemblyOriginatorKeyFile>
-    <Version>1.0.27</Version>
+    <Version>1.0.28</Version>
     <Authors>ETSOO SmartERP NextGen Team</Authors>
     <Company>ETSOO / 亿速思维</Company>
-    <Copyright>Copyright © ETSOO 2004 - 2023</Copyright>
+    <Copyright>Copyright © ETSOO 2004 - 2024</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://www.etsoo.com/SmartERP/</PackageProjectUrl>
     <PackageIcon>logo.png</PackageIcon>
@@ -17,6 +17,8 @@
     <RepositoryType></RepositoryType>
     <Description>SendCloud SMS &amp; Email SDK
 SendCloud 短信邮件发送服务开发工具包</Description>
+    <IsAotCompatible>true</IsAotCompatible>
+    <EnableConfigurationBindingGenerator>true</EnableConfigurationBindingGenerator>
   </PropertyGroup>
 
   <ItemGroup>
@@ -29,9 +31,10 @@ SendCloud 短信邮件发送服务开发工具包</Description>
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="com.etsoo.SMS" Version="1.0.26" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Options" Version="7.0.1" />
+    <PackageReference Include="com.etsoo.SMS" Version="1.0.45" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="8.0.2" />
   </ItemGroup>
 
 </Project>
